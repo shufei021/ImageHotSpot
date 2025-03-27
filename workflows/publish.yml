@@ -1,0 +1,37 @@
+name: Publish to npm
+
+on:
+  push:
+    branches: [ main ]  # 指定触发分支（如 main/master）
+    paths:
+      - 'package.json'  # 只有 package.json 变化时触发（可选）
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 安装 Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+
+      # 安装依赖并构建（如果有）
+      - run: npm ci
+      - run: npm run build --if-present
+
+      # 自动版本号管理（可选）
+      - name: Bump version
+        uses: phips28/gh-action-bump-version@v9.2.0
+        with:
+          tag-prefix: 'v'
+          commit-message: 'chore: release v${version}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 发布到 npm
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # 使用保存的 npm 令牌
