@@ -9,19 +9,19 @@ module.exports = [
     input: './src/index.ts',
     output: [
       {
-        dir: 'lib',
+        dir: 'dist',
         format: 'cjs',
         entryFileNames: '[name].cjs.js',
         sourcemap: false, // 是否输出sourcemap
       },
       {
-        dir: 'lib',
+        dir: 'dist',
         format: 'esm',
         entryFileNames: '[name].esm.js',
         sourcemap: false, // 是否输出sourcemap
       },
       {
-        dir: 'lib',
+        dir: 'dist',
         format: 'umd',
         entryFileNames: '[name].umd.js',
         name: 'ImageHotSpot', // umd模块名称，相当于一个命名空间，会自动挂载到window下面

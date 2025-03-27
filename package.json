@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "一款可编辑和交互型的图片热区插件",
   "private": false,
-  "main": "./lib/index.umd.js",
-  "module": "lib/index.esm.js",
-  "jsnext:main": "lib/index.esm.js",
-  "browser": "lib/index.umd.js",
-  "types": "lib/index.d.ts",
+  "main": "./dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "jsnext:main": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
 
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "build": "rollup -c",

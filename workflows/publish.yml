@@ -23,7 +23,19 @@ jobs:
       - name: Install dependencies
         run: npm ci          # 使用精确的依赖安装
 
-      - name: Publish to npm
-        run: npm publish
+      - name: img-hotspot
+        run: npm run build  # 生成构建产物（如 dist/ 目录）
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          # 上传构建产物（可选）
+          files: |
+            dist/*.js
+            README.md
+          # 自动生成 Release 说明（基于提交记录）
+          generate_release_notes: true
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # 使用 GitHub Secret
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 自动生成的 Token
+
+          
