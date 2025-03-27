@@ -252,7 +252,9 @@ interface ImgHotOptions {
       this.handleMouseDownFunc = this.handleMouseDown.bind(this);
       // 添加mousedown事件监听器
       this.canvas!.addEventListener("mousedown", this.handleMouseDownFunc);
-      this.options?.afterInit?.();
+      setTimeout(() => {
+        this.options?.afterInit?.()
+      })
     }
   
     // Generate hot area container
