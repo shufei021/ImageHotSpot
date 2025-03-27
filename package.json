@@ -1,25 +1,23 @@
 {
-  "name": "ts-rollup",
-  "main": "lib/index.cjs.js",
+  "name": "image-hot-spot",
+  "version": "1.0.0",
+  "description": "一款可编辑和交互型的图片热区插件",
+  "private": false,
+  "main": "./lib/index.umd.js",
   "module": "lib/index.esm.js",
   "jsnext:main": "lib/index.esm.js",
   "browser": "lib/index.umd.js",
   "types": "lib/index.d.ts",
-  "version": "1.0.0",
-  "description": "",
+
   "files": [
     "lib"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SaebaRyoo/fe-utils.git"
-  },
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
     "coveralls": "jest --coverage"
   },
-  "author": "",
+  "author": "shufei",
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-env": "^7.24.7",
@@ -41,5 +39,10 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "tslib": "^2.6.3"
+  },
+  "homepage": "https://shufei021.github.io/ImageHotSpot/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shufei021/ImageHotSpot.git"
   }
 }
