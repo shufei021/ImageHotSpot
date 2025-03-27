@@ -90,6 +90,8 @@ interface ImgHotOptions {
     overlapCallback?: (isOverlapping: boolean) => void;
     // 手动添加函数
     manualAdd?: (create:Function) => void;
+    // 在初始化之后执行
+    afterInit(): () => void;
 }
 
  class ImageHotSpot {
@@ -250,6 +252,7 @@ interface ImgHotOptions {
       this.handleMouseDownFunc = this.handleMouseDown.bind(this);
       // 添加mousedown事件监听器
       this.canvas!.addEventListener("mousedown", this.handleMouseDownFunc);
+      this.options?.afterInit?.();
     }
   
     // Generate hot area container
