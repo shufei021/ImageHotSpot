@@ -24,7 +24,7 @@ module.exports = [
         dir: 'lib',
         format: 'umd',
         entryFileNames: '[name].umd.js',
-        name: 'ImgHotOptions', // umd模块名称，相当于一个命名空间，会自动挂载到window下面
+        name: 'ImageHotSpot', // umd模块名称，相当于一个命名空间，会自动挂载到window下面
         sourcemap: false,
         plugins: [terser()],
       },
