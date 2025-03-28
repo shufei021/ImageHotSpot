@@ -65,7 +65,7 @@ class ImageHotSpot {
             tm: Object.assign({ className: "tm", cssText: `${handleCommonStyle}cursor: n-resize;top: -4px;left: 50%;transform: translateX(-50%);` }, (((_0 = (_z = this.options) === null || _z === void 0 ? void 0 : _z.style) === null || _0 === void 0 ? void 0 : _0.tm) || {})),
             rt: Object.assign({ className: "rt", cssText: `${handleCommonStyle}cursor: ne-resize;top: -4px;right: -4px;` }, (((_2 = (_1 = this.options) === null || _1 === void 0 ? void 0 : _1.style) === null || _2 === void 0 ? void 0 : _2.rt) || {})),
             // 热区里面元素默认样式
-            seq: Object.assign({ className: "hot-seq", cssText: `min-width: 14px; min-height: 14px; text-align: center; color: #fff; line-height: 14px; position: absolute; top: 0px; left: 0px; background-color: red; font-size: 10px;z-index:-1;cursor:default` }, (((_4 = (_3 = this.options) === null || _3 === void 0 ? void 0 : _3.style) === null || _4 === void 0 ? void 0 : _4.seq) || {})),
+            seq: Object.assign({ className: "hot-seq", cssText: `min-width: 14px; min-height: 14px; text-align: center; color: #fff; line-height: 14px; position: absolute; top: 0px; left: 0px; background-color: red; font-size: 10px;cursor:default` }, (((_4 = (_3 = this.options) === null || _3 === void 0 ? void 0 : _3.style) === null || _4 === void 0 ? void 0 : _4.seq) || {})),
             del: Object.assign({ className: "hot-del", cssText: `width: 16px; height: 16px; position: absolute; right: -20px; top: -20px; z-index: 2; cursor: pointer;` }, (((_6 = (_5 = this.options) === null || _5 === void 0 ? void 0 : _5.style) === null || _6 === void 0 ? void 0 : _6.del) || {}))
         };
     }
@@ -84,6 +84,10 @@ class ImageHotSpot {
         this.handleMouseDownFunc = this.handleMouseDown.bind(this);
         // 添加mousedown事件监听器
         this.canvas.addEventListener("mousedown", this.handleMouseDownFunc);
+        setTimeout(() => {
+            var _a, _b;
+            (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.afterInit) === null || _b === void 0 ? void 0 : _b.call(_a);
+        });
     }
     // Generate hot area container
     // 生成热区容器

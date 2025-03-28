@@ -47,6 +47,7 @@ interface ImgHotOptions {
     beforeDel?: (index: number, element: HTMLElement, callback: () => void) => void;
     overlapCallback?: (isOverlapping: boolean) => void;
     manualAdd?: (create: Function) => void;
+    afterInit(): () => void;
 }
 declare class ImageHotSpot {
     private options;

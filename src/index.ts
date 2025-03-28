@@ -218,7 +218,7 @@ interface ImgHotOptions {
         // 热区里面元素默认样式
         seq: {
           className: "hot-seq",
-          cssText: `min-width: 14px; min-height: 14px; text-align: center; color: #fff; line-height: 14px; position: absolute; top: 0px; left: 0px; background-color: red; font-size: 10px;z-index:-1;cursor:default`,
+          cssText: `min-width: 14px; min-height: 14px; text-align: center; color: #fff; line-height: 14px; position: absolute; top: 0px; left: 0px; background-color: red; font-size: 10px;cursor:default`,
           ...(this.options?.style?.seq || {}),
         },
         del: {

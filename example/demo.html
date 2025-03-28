@@ -198,11 +198,11 @@
       </div>
     </div>
   </body>
-  <script src="../lib/index.umd.js"></script>
+  <script src="../dist/index.umd.js"></script>
   <script>
     const imgHot = new ImageHotSpot({
       el: ".container",
-      customUpload: true,
+      // customUpload: true,
       addMode:'manual',
       scaleMode: "auto", // 上传的热区图片缩放模式 auto 自适应 enlarge 放大
       manualAdd:(creat)=>{
@@ -228,15 +228,15 @@
           : "none";
       },
       style:{
-        seq:{
-          style:{
-            color:'black',
-            backgroundColor:'#fff',
-            left:'50%',
-            top:'50%',
-            transform:'translate(-50%,-50%)'
-          }
-        }
+        // seq:{
+        //   style:{
+        //     color:'black',
+        //     backgroundColor:'#fff',
+        //     left:'50%',
+        //     top:'50%',
+        //     transform:'translate(-50%,-50%)'
+        //   }
+        // }
       },
       squarePos:{
         // w:'200px',

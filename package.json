@@ -40,7 +40,6 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "tslib": "^2.6.3"
   },
-  "homepage": "https://shufei021.github.io/ImageHotSpot/",
   "repository": {
     "type": "git",
     "url": "https://github.com/shufei021/ImageHotSpot.git"
