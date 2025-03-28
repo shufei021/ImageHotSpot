@@ -60,6 +60,7 @@ const data = hotSpot.getHotAreaData("array"); // 返回数组或对象
 |beforeDel|	Function|	-	|删除热区前的回调，需手动调用 delFunc 执行删除|
 |overlapCallback|	Function|	-	|热区拖动结束时触发，返回是否重叠的布尔值|
 |delImage|	Function|	-	|删除上传的热区图片|
+|upperLimit|	number | string|	-	|上传的热区的数量上限|
 
 ## 方法说明
 
