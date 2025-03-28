@@ -66,6 +66,8 @@ interface StyleOptions {
 
 // 定义一个接口ImgHotOptions，用于配置图片热区插件
 interface ImgHotOptions {
+    // 热区数量上限，可以是字符串或数字
+    upperLimit: string | number;
     // el：图片热区插件的容器，可以是字符串或HTMLElement类型
     el: string | HTMLElement;
     // customUpload：是否自定义上传，默认为不需要自定义上传热区图片
@@ -267,7 +269,11 @@ interface ImgHotOptions {
       // 将canvas元素赋值给this.canvas
       this.canvas = canvas;
     }
-  
+    
+    isNum (n: string | number) {
+      return typeof n == 'symbol' ? false : !isNaN(parseFloat(n)) && isFinite(n)
+    }
+
     // Add hot area
     addHotArea({ x = this.squarePos.x, y = this.squarePos.y, w = this.squarePos.w, h = this.squarePos.h } = {},isForceAdd: boolean) {
       if(this.options?.beforeAdd?.(this.hasBackgroundImage())) {
@@ -278,14 +284,17 @@ interface ImgHotOptions {
         return Promise.reject(new Error("Please initialize the instance first"));
       }
       if(this.options.addMode === 'default' || isForceAdd){
+        if(this.isNum(this.options.upperLimit) && this.container.querySelectorAll(".hot-square").length >= Number(this.options.upperLimit)){
+          return Promise.reject(new Error("upperLimit is exceeded"));
+        }
        const seq = this.container.querySelectorAll(".hot-square").length + 1;
        const square = this.createHotSquare(seq,{style:{ left: parseFloat(x) + "px" , top: parseFloat(y) + "px", width: parseFloat(w) + "px", height: parseFloat(h) + "px" }});
        this.canvas.appendChild(square);
        this.options?.afterAdd?.({ seq, square });
        return Promise.resolve({ index: seq-1, square });
-     }else{
-       return Promise.reject(new Error("options addMode is not default"));
-     }
+      }else{
+        return Promise.reject(new Error("options addMode is not default"));
+      }
     }
   
     // Create hot square element

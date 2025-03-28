@@ -102,6 +102,9 @@ class ImageHotSpot {
         // 将canvas元素赋值给this.canvas
         this.canvas = canvas;
     }
+    isNum(n) {
+        return typeof n == 'symbol' ? false : !isNaN(parseFloat(n)) && isFinite(n);
+    }
     // Add hot area
     addHotArea({ x = this.squarePos.x, y = this.squarePos.y, w = this.squarePos.w, h = this.squarePos.h } = {}, isForceAdd) {
         var _a, _b, _c, _d;
@@ -113,6 +116,9 @@ class ImageHotSpot {
             return Promise.reject(new Error("Please initialize the instance first"));
         }
         if (this.options.addMode === 'default' || isForceAdd) {
+            if (this.isNum(this.options.upperLimit) && this.container.querySelectorAll(".hot-square").length >= Number(this.options.upperLimit)) {
+                return Promise.reject(new Error("upperLimit is exceeded"));
+            }
             const seq = this.container.querySelectorAll(".hot-square").length + 1;
             const square = this.createHotSquare(seq, { style: { left: parseFloat(x) + "px", top: parseFloat(y) + "px", width: parseFloat(w) + "px", height: parseFloat(h) + "px" } });
             this.canvas.appendChild(square);

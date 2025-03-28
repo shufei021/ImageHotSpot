@@ -32,6 +32,7 @@ interface SquarePos {
     h?: string;
 }
 interface ImgHotOptions {
+    upperLimit: string | number;
     el: string | HTMLElement;
     customUpload?: boolean;
     addMode?: 'default' | 'manual';
@@ -66,6 +67,7 @@ declare class ImageHotSpot {
     initSquarePos(): void;
     resetInit(): void;
     generateContainer(): void;
+    isNum(n: string | number): boolean;
     addHotArea({ x, y, w, h }: {
         x?: any;
         y?: any;
