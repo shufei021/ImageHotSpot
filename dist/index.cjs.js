@@ -340,7 +340,7 @@ class ImageHotSpot {
                         if (typeof this.options.manualAdd === 'function') {
                             const hasBackgroundImage = this.hasBackgroundImage();
                             // 不需要上传图片
-                            if (this.options.customUpload !== true && !hasBackgroundImage) {
+                            if (this.options.customUpload !== true) {
                                 this.options.manualAdd(creat) && creat();
                             }
                             else if (this.options.customUpload === true && hasBackgroundImage) {
