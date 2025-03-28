@@ -103,14 +103,14 @@ class ImageHotSpot {
     // Add hot area
     addHotArea({ x = this.squarePos.x, y = this.squarePos.y, w = this.squarePos.w, h = this.squarePos.h } = {}, isForceAdd) {
         var _a, _b, _c, _d;
+        if ((_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.beforeAdd) === null || _b === void 0 ? void 0 : _b.call(_a, this.hasBackgroundImage())) {
+            return Promise.reject(new Error("beforeAdd return false"));
+        }
+        // 添加热区先检测热区画布容器存在不
+        if (!this.canvas || !this.container) {
+            return Promise.reject(new Error("Please initialize the instance first"));
+        }
         if (this.options.addMode === 'default' || isForceAdd) {
-            // 添加热区先检测热区画布容器存在不
-            if (!this.canvas) {
-                (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.beforeAdd) === null || _b === void 0 ? void 0 : _b.call(_a);
-                return Promise.reject(new Error("Please initialize the instance first"));
-            }
-            if (!this.container)
-                return Promise.reject(new Error("Please initialize the instance first"));
             const seq = this.container.querySelectorAll(".hot-square").length + 1;
             const square = this.createHotSquare(seq, { style: { left: parseFloat(x) + "px", top: parseFloat(y) + "px", width: parseFloat(w) + "px", height: parseFloat(h) + "px" } });
             this.canvas.appendChild(square);
@@ -322,7 +322,7 @@ class ImageHotSpot {
                 height = _h;
             };
             document.onmouseup = (e) => {
-                var _a, _b, _c;
+                var _a, _b;
                 square && ((_a = this.canvas) === null || _a === void 0 ? void 0 : _a.removeChild(square));
                 const creat = () => this.addHotArea({
                     x: recordX + 'px',
@@ -330,8 +330,25 @@ class ImageHotSpot {
                     w: width + 'px',
                     h: height + 'px',
                 }, true);
-                if (width > 16 && height > 16 && ((_c = (_b = this.options) === null || _b === void 0 ? void 0 : _b.manualAdd) === null || _c === void 0 ? void 0 : _c.call(_b, creat))) {
-                    creat();
+                // 手动触发
+                if (((_b = this.options) === null || _b === void 0 ? void 0 : _b.addMode) === 'manual') {
+                    // 满足绘制条件尺寸
+                    if (width > 16 && height > 16) {
+                        // 有传入手动新增函数
+                        if (typeof this.options.manualAdd === 'function') {
+                            const hasBackgroundImage = this.hasBackgroundImage();
+                            // 不需要上传图片
+                            if (this.options.customUpload !== true && !hasBackgroundImage) {
+                                this.options.manualAdd(creat) && creat();
+                            }
+                            else if (this.options.customUpload === true && hasBackgroundImage) {
+                                this.options.manualAdd(creat) && creat();
+                            }
+                        }
+                        else {
+                            creat();
+                        }
+                    }
                 }
                 document.onmousemove = null;
                 document.onmouseup = null;
@@ -628,6 +645,14 @@ class ImageHotSpot {
         this.hotImgHeight = h * scale;
         resolve({ w: this.hotImgWidth, h: this.hotImgHeight, scale: this.scale });
     }
+    hasBackgroundImage() {
+        if (!this.canvas)
+            return false;
+        const style = getComputedStyle(this.canvas);
+        const bgImage = style.backgroundImage;
+        // 检查 backgroundImage 是否为有效图片路径
+        return bgImage !== 'none' && bgImage.includes('url(');
+    }
     // Destroy instance
     destroy() {
         var _a, _b, _c;
@@ -636,6 +661,7 @@ class ImageHotSpot {
         this.canvas = null;
         this.isInit = false;
         (_c = this.container) === null || _c === void 0 ? void 0 : _c.removeEventListener("mousedown", this.handleMouseDownFunc);
+        this.container = null;
     }
     // Get maximum z-index
     getMaxZIndex() {

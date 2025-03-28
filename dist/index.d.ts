@@ -39,14 +39,14 @@ interface ImgHotOptions {
     handle?: HandleOptions;
     style?: StyleOptions;
     squarePos?: SquarePos;
-    beforeAdd?: () => void;
+    beforeAdd?: (is: boolean) => void;
     afterAdd(arg0: {
         index: number;
         square: HTMLElement;
     }): unknown;
     beforeDel?: (index: number, element: HTMLElement, callback: () => void) => void;
     overlapCallback?: (isOverlapping: boolean) => void;
-    manualAdd?: (create: Function) => void;
+    manualAdd?: (create: Function) => boolean;
     afterInit(): () => void;
 }
 declare class ImageHotSpot {
@@ -162,6 +162,7 @@ declare class ImageHotSpot {
             scale: number;
         }): void;
     }): void;
+    hasBackgroundImage(): boolean;
     destroy(): void;
     getMaxZIndex(): number;
     /***

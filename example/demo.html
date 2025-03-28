@@ -202,18 +202,21 @@
   <script>
     const imgHot = new ImageHotSpot({
       el: ".container",
-      // customUpload: true,
-      addMode:'manual',
+      customUpload: true,
+      // addMode:'manual',
       scaleMode: "auto", // 上传的热区图片缩放模式 auto 自适应 enlarge 放大
-      manualAdd:(creat)=>{
-       return true
-      },
+      // manualAdd:(creat)=>{
+      //   creat()
+      //  return false
+      // },
       beforeDel: (index, square, delFunc) => {
         square?.data?.remove();
         delFunc();
       },
-      beforeAdd: () => {
-        alert("请先传入热区图片，再添加热区");
+      beforeAdd: (hasBackgroundImage) => {
+        // console.log('%c [ is ]-217', 'font-size:13px; background:pink; color:#bf2c9f;', hasBackgroundImage)
+        !hasBackgroundImage &&  alert("请先传入热区图片，再添加热区");
+        return false
       },
       afterAdd({index, square }){
         const li = document.createElement("li");

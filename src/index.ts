@@ -68,7 +68,7 @@ interface StyleOptions {
 interface ImgHotOptions {
     // el：图片热区插件的容器，可以是字符串或HTMLElement类型
     el: string | HTMLElement;
-    // customUpload：是否自定义上传，默认为false
+    // customUpload：是否自定义上传，默认为不需要自定义上传热区图片
     customUpload?: boolean;
     // addMode：添加模式，默认为'default'，可选值为'default'或'manual'
     addMode?: 'default' | 'manual';
@@ -81,7 +81,7 @@ interface ImgHotOptions {
     // squarePos：正方形位置，类型为SquarePos
     squarePos?: SquarePos;
     // beforeAdd：添加前的回调函数
-    beforeAdd?: () => void;
+    beforeAdd?: (is:boolean) => void;
     // afterAdd：添加后的回调函数，参数为索引、元素和回调函数
     afterAdd(arg0: { index: number; square: HTMLElement; }): unknown;
     // beforeDel：删除前的回调函数，参数为索引、元素和回调函数
@@ -89,7 +89,7 @@ interface ImgHotOptions {
     // overlapCallback：重叠时的回调函数，参数为是否重叠
     overlapCallback?: (isOverlapping: boolean) => void;
     // 手动添加函数
-    manualAdd?: (create:Function) => void;
+    manualAdd?: (create:Function) => boolean;
     // 在初始化之后执行
     afterInit(): () => void;
 }
@@ -270,13 +270,14 @@ interface ImgHotOptions {
   
     // Add hot area
     addHotArea({ x = this.squarePos.x, y = this.squarePos.y, w = this.squarePos.w, h = this.squarePos.h } = {},isForceAdd: boolean) {
-     if(this.options.addMode === 'default' || isForceAdd){
-       // 添加热区先检测热区画布容器存在不
-       if (!this.canvas) {
-         this.options?.beforeAdd?.();
-         return Promise.reject(new Error("Please initialize the instance first"));
-       }
-       if(!this.container) return Promise.reject(new Error("Please initialize the instance first"));
+      if(this.options?.beforeAdd?.(this.hasBackgroundImage())) {
+       return Promise.reject(new Error("beforeAdd return false"));
+      }
+      // 添加热区先检测热区画布容器存在不
+      if (!this.canvas || !this.container) {
+        return Promise.reject(new Error("Please initialize the instance first"));
+      }
+      if(this.options.addMode === 'default' || isForceAdd){
        const seq = this.container.querySelectorAll(".hot-square").length + 1;
        const square = this.createHotSquare(seq,{style:{ left: parseFloat(x) + "px" , top: parseFloat(y) + "px", width: parseFloat(w) + "px", height: parseFloat(h) + "px" }});
        this.canvas.appendChild(square);
@@ -519,8 +520,23 @@ interface ImgHotOptions {
             w: width+ 'px',
             h: height+ 'px',
           },true)
-          if(width> 16 && height > 16 && this.options?.manualAdd?.(creat)){
-            creat()
+          // 手动触发
+          if(this.options?.addMode === 'manual'){
+            // 满足绘制条件尺寸
+            if(width> 16 && height > 16 ){
+              // 有传入手动新增函数
+              if(typeof this.options.manualAdd === 'function'){
+                const hasBackgroundImage = this.hasBackgroundImage()
+                // 不需要上传图片
+                if(this.options.customUpload !== true && !hasBackgroundImage){
+                  this.options.manualAdd(creat) && creat()
+                } else if(this.options.customUpload === true && hasBackgroundImage){
+                  this.options.manualAdd(creat) && creat()
+                }
+              } else{
+                creat()
+              }
+            }
           }
           document.onmousemove = null;
           document.onmouseup = null;
@@ -1002,6 +1018,14 @@ interface ImgHotOptions {
       this.hotImgHeight = h * scale;
       resolve({ w: this.hotImgWidth, h: this.hotImgHeight, scale: this.scale });
     }
+
+    hasBackgroundImage() {
+      if(!this.canvas) return false
+      const style = getComputedStyle(this.canvas);
+      const bgImage = style.backgroundImage;
+      // 检查 backgroundImage 是否为有效图片路径
+      return bgImage !== 'none' && bgImage.includes('url(');
+    }
   
     // Destroy instance
     destroy() {
@@ -1010,6 +1034,7 @@ interface ImgHotOptions {
       this.canvas = null;
       this.isInit = false;
       this.container?.removeEventListener("mousedown", this.handleMouseDownFunc);
+      this.container = null
     }
   
     // Get maximum z-index
