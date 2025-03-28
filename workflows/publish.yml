@@ -33,6 +33,7 @@ jobs:
           files: |
             dist/*.js
             README.md
+            package.json
           # 自动生成 Release 说明（基于提交记录）
           generate_release_notes: true
         env:
