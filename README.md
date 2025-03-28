@@ -1,6 +1,6 @@
-# ImageHotSpot
+# ImgHotSpot
 
-ImageHotSpot 是一个基于 JavaScript 和 div 实现的图片热区编辑工具类插件，支持动态上传图片、热区交互编辑与自适应缩放，适用于复杂图片标注场景。
+ImgHotSpot 是一个基于 JavaScript 和 div 实现的图片热区编辑工具类插件，支持动态上传图片、热区交互编辑与自适应缩放，适用于复杂图片标注场景。
 
 
 
@@ -24,10 +24,10 @@ npm i img-hotspot
 **2. 基础用法**
 
 ```js
-import ImageHotSpot from 'img-hotspot'
+import ImgHotSpot from 'img-hotspot'
 
 // 初始化实例
-const hotSpot = new ImageHotSpot({
+const hotSpot = new ImgHotSpot({
   el: "#container", // 容器元素
   addMode: "default", // 热区添加模式：default（直接添加）或 manual（手动绘制）
   scaleMode: "auto", // 图片缩放模式：auto（自动适应容器）或自定义
@@ -85,7 +85,7 @@ const data = hotSpot.getHotAreaData("array"); // 返回数组或对象
 在添加热区前触发，可用于校验：
 
 ```js
-new ImageHotSpot({
+new ImgHotSpot({
   beforeAdd: () => {
     if (condition) return Promise.resolve();
     else return Promise.reject("拒绝添加");
@@ -97,7 +97,7 @@ new ImageHotSpot({
 > 热区添加成功后触发：
 
 ```js
-new ImageHotSpot({
+new ImgHotSpot({
   afterAdd: ({ index, square }) => {
     console.log(`热区 ${index} 已添加`, square);
   }
@@ -109,7 +109,7 @@ new ImageHotSpot({
 >删除热区前触发，需手动执行删除操作：
 
 ```js
-new ImageHotSpot({
+new ImgHotSpot({
   beforeDel: (index, square, delFunc) => {
     if (confirm("确认删除？")) delFunc();
   }
@@ -120,7 +120,7 @@ new ImageHotSpot({
 通过 options.style 覆盖默认样式：
 
 ```js
-new ImageHotSpot({
+new ImgHotSpot({
   style: {
     canvas: { cssText: "border: 2px solid red;" }, // 画布样式
     square: { cssText: "background: rgba(255,0,0,0.1);" }, // 热区容器
@@ -135,7 +135,7 @@ new ImageHotSpot({
 **1. 手动绘制热区**
 
 ```js
-const hotSpot = new ImageHotSpot({
+const hotSpot = new ImgHotSpot({
   el: "#container",
   addMode: "manual",
   afterAdd: ({ seq }) => console.log(`新增热区 ${seq}`),
