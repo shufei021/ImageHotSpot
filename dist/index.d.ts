@@ -41,7 +41,7 @@ interface ImgHotOptions {
     squarePos?: SquarePos;
     beforeAdd?: (is: boolean) => void;
     afterAdd(arg0: {
-        index: number;
+        seq: number;
         square: HTMLElement;
     }): unknown;
     beforeDel?: (index: number, element: HTMLElement, callback: () => void) => void;
@@ -163,6 +163,7 @@ declare class ImageHotSpot {
         }): void;
     }): void;
     hasBackgroundImage(): boolean;
+    delImage(): void;
     destroy(): void;
     getMaxZIndex(): number;
     /***

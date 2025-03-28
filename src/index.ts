@@ -83,7 +83,7 @@ interface ImgHotOptions {
     // beforeAdd：添加前的回调函数
     beforeAdd?: (is:boolean) => void;
     // afterAdd：添加后的回调函数，参数为索引、元素和回调函数
-    afterAdd(arg0: { index: number; square: HTMLElement; }): unknown;
+    afterAdd(arg0: { seq: number; square: HTMLElement; }): unknown;
     // beforeDel：删除前的回调函数，参数为索引、元素和回调函数
     beforeDel?: (index: number, element: HTMLElement, callback: () => void) => void;
     // overlapCallback：重叠时的回调函数，参数为是否重叠
@@ -281,8 +281,8 @@ interface ImgHotOptions {
        const seq = this.container.querySelectorAll(".hot-square").length + 1;
        const square = this.createHotSquare(seq,{style:{ left: parseFloat(x) + "px" , top: parseFloat(y) + "px", width: parseFloat(w) + "px", height: parseFloat(h) + "px" }});
        this.canvas.appendChild(square);
-       this.options?.afterAdd?.({ index: seq, square });
-       return Promise.resolve({ index: seq, square });
+       this.options?.afterAdd?.({ seq, square });
+       return Promise.resolve({ index: seq-1, square });
      }else{
        return Promise.reject(new Error("options addMode is not default"));
      }
@@ -1026,14 +1026,21 @@ interface ImgHotOptions {
       // 检查 backgroundImage 是否为有效图片路径
       return bgImage !== 'none' && bgImage.includes('url(');
     }
+
+    delImage() {
+      if(!this.canvas) return
+      this.canvas.style.backgroundImage = 'none';
+      this.canvas.style.display = 'none';
+      this.container?.querySelectorAll(".hot-square").forEach((i) => i.remove());
+    }
   
     // Destroy instance
     destroy() {
       this.container?.querySelectorAll(".hot-square").forEach((i) => i.remove());
       this.canvas?.remove();
+      this.container?.removeEventListener("mousedown", this.handleMouseDownFunc);
       this.canvas = null;
       this.isInit = false;
-      this.container?.removeEventListener("mousedown", this.handleMouseDownFunc);
       this.container = null
     }
   
@@ -1051,19 +1058,15 @@ interface ImgHotOptions {
      * @description: 校验热区之间是否重叠
      */
     areElementsOverlapping(container = this.canvas) {
-        if(!container) return false
       // 获取容器的所有子元素
-      const children = container.querySelectorAll(".hot-square");
+      const children = container!.querySelectorAll(".hot-square");
       const length = children.length;
-  
       // 遍历每个子元素
       for (let i = 0; i < length; i++) {
         const rect1 = children[i].getBoundingClientRect();
-  
         // 遍历剩余的子元素进行比较
         for (let j = i + 1; j < length; j++) {
           const rect2 = children[j].getBoundingClientRect();
-  
           // 检查是否有重叠
           if (
             !(
@@ -1083,39 +1086,28 @@ interface ImgHotOptions {
   
     // mode: array | object
     getHotAreaData(mode: "array" | "object" = "array") {
-        const container = this.container as HTMLElement;
-        const list = container.querySelectorAll<HTMLElement>(".hot-square");
-        const hotSquares = Array.from(list);
-      
-        return hotSquares.reduce(
-          (acc, current) => {
-            const seqElement = current.querySelector<HTMLElement>(".hot-seq");
-            if (!seqElement) return acc;
-      
-            const index = parseInt(seqElement.innerText) - 1;
-            const x = parseFloat(current.style.left || "0");
-            const y = parseFloat(current.style.top || "0");
-      
-            if (mode === "array") {
-              // 类型保护：确保在数组模式下操作
-              const arrAcc = acc as { x: number; y: number; w: number; h: number; index: number }[];
-              if (index < arrAcc.length) {
-                arrAcc[index] = { x, y, w: current.offsetWidth, h: current.offsetHeight, index };
-              } else {
-                console.warn(`Index ${index} exceeds array length`);
-              }
-              return arrAcc;
-            } else {
-              // 类型保护：确保在对象模式下操作
-              const objAcc = acc as Record<number, { x: number; y: number; w: number; h: number; index: number }>;
-              objAcc[index] = { x, y, w: current.offsetWidth, h: current.offsetHeight, index };
-              return objAcc;
-            }
-          },
-          mode === "array" 
-            ? ([] as { x: number; y: number; w: number; h: number; index: number }[])
-            : ({} as Record<number, { x: number; y: number; w: number; h: number; index: number }>)
-        );
+      const container = this.container as HTMLElement;
+      const list = container.querySelectorAll<HTMLElement>(".hot-square");
+      const hotSquares = Array.from(list);
+      const map = hotSquares.reduce(
+        (acc, current) => {
+          const seqElement = current.querySelector<HTMLElement>(".hot-seq");
+          if (!seqElement) return acc;
+          const index = parseInt(seqElement.innerText) - 1;
+          const x = parseFloat(current.style.left || "0");
+          const y = parseFloat(current.style.top || "0");
+          // 类型保护：确保在对象模式下操作
+          const objAcc = acc as Record<number, { x: number; y: number; w: number; h: number; index: number }>;
+          objAcc[index] = { x, y, w: current.offsetWidth, h: current.offsetHeight, index };
+          return objAcc;
+        },
+        {} as Record<number, { x: number; y: number; w: number; h: number; index: number }>
+      );
+      if (mode === "array") {
+        return Object.values(map)
+      } else {
+        return map
+      }
     }
 }
 

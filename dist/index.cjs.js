@@ -116,8 +116,8 @@ class ImageHotSpot {
             const seq = this.container.querySelectorAll(".hot-square").length + 1;
             const square = this.createHotSquare(seq, { style: { left: parseFloat(x) + "px", top: parseFloat(y) + "px", width: parseFloat(w) + "px", height: parseFloat(h) + "px" } });
             this.canvas.appendChild(square);
-            (_d = (_c = this.options) === null || _c === void 0 ? void 0 : _c.afterAdd) === null || _d === void 0 ? void 0 : _d.call(_c, { index: seq, square });
-            return Promise.resolve({ index: seq, square });
+            (_d = (_c = this.options) === null || _c === void 0 ? void 0 : _c.afterAdd) === null || _d === void 0 ? void 0 : _d.call(_c, { seq, square });
+            return Promise.resolve({ index: seq - 1, square });
         }
         else {
             return Promise.reject(new Error("options addMode is not default"));
@@ -655,14 +655,22 @@ class ImageHotSpot {
         // 检查 backgroundImage 是否为有效图片路径
         return bgImage !== 'none' && bgImage.includes('url(');
     }
+    delImage() {
+        var _a;
+        if (!this.canvas)
+            return;
+        this.canvas.style.backgroundImage = 'none';
+        this.canvas.style.display = 'none';
+        (_a = this.container) === null || _a === void 0 ? void 0 : _a.querySelectorAll(".hot-square").forEach((i) => i.remove());
+    }
     // Destroy instance
     destroy() {
         var _a, _b, _c;
         (_a = this.container) === null || _a === void 0 ? void 0 : _a.querySelectorAll(".hot-square").forEach((i) => i.remove());
         (_b = this.canvas) === null || _b === void 0 ? void 0 : _b.remove();
+        (_c = this.container) === null || _c === void 0 ? void 0 : _c.removeEventListener("mousedown", this.handleMouseDownFunc);
         this.canvas = null;
         this.isInit = false;
-        (_c = this.container) === null || _c === void 0 ? void 0 : _c.removeEventListener("mousedown", this.handleMouseDownFunc);
         this.container = null;
     }
     // Get maximum z-index
@@ -678,8 +686,6 @@ class ImageHotSpot {
      * @description: 校验热区之间是否重叠
      */
     areElementsOverlapping(container = this.canvas) {
-        if (!container)
-            return false;
         // 获取容器的所有子元素
         const children = container.querySelectorAll(".hot-square");
         const length = children.length;
@@ -705,33 +711,24 @@ class ImageHotSpot {
         const container = this.container;
         const list = container.querySelectorAll(".hot-square");
         const hotSquares = Array.from(list);
-        return hotSquares.reduce((acc, current) => {
+        const map = hotSquares.reduce((acc, current) => {
             const seqElement = current.querySelector(".hot-seq");
             if (!seqElement)
                 return acc;
             const index = parseInt(seqElement.innerText) - 1;
             const x = parseFloat(current.style.left || "0");
             const y = parseFloat(current.style.top || "0");
-            if (mode === "array") {
-                // 类型保护：确保在数组模式下操作
-                const arrAcc = acc;
-                if (index < arrAcc.length) {
-                    arrAcc[index] = { x, y, w: current.offsetWidth, h: current.offsetHeight, index };
-                }
-                else {
-                    console.warn(`Index ${index} exceeds array length`);
-                }
-                return arrAcc;
-            }
-            else {
-                // 类型保护：确保在对象模式下操作
-                const objAcc = acc;
-                objAcc[index] = { x, y, w: current.offsetWidth, h: current.offsetHeight, index };
-                return objAcc;
-            }
-        }, mode === "array"
-            ? []
-            : {});
+            // 类型保护：确保在对象模式下操作
+            const objAcc = acc;
+            objAcc[index] = { x, y, w: current.offsetWidth, h: current.offsetHeight, index };
+            return objAcc;
+        }, {});
+        if (mode === "array") {
+            return Object.values(map);
+        }
+        else {
+            return map;
+        }
     }
 }
 
