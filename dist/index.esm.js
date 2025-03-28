@@ -101,7 +101,8 @@ class ImageHotSpot {
         this.canvas = canvas;
     }
     isNum(n) {
-        return typeof n == 'symbol' ? false : !isNaN(parseFloat(n)) && isFinite(n);
+        const str = String(n);
+        return typeof n == 'symbol' ? false : !isNaN(parseFloat(str)) && isFinite(Number(str));
     }
     // Add hot area
     addHotArea({ x = this.squarePos.x, y = this.squarePos.y, w = this.squarePos.w, h = this.squarePos.h } = {}, isForceAdd) {
