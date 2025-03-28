@@ -271,7 +271,8 @@ interface ImgHotOptions {
     }
     
     isNum (n: string | number) {
-      return typeof n == 'symbol' ? false : !isNaN(parseFloat(n)) && isFinite(n)
+      const str = String(n);
+      return typeof n == 'symbol' ? false : !isNaN(parseFloat(str)) && isFinite(Number(str))
     }
 
     // Add hot area
