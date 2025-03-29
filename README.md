@@ -3,11 +3,7 @@
 ImgHotSpot 是一个基于 JavaScript 和 div 实现的图片热区编辑工具类插件，支持动态上传图片、热区交互编辑与自适应缩放，适用于复杂图片标注场景。
 
 
-
-
 [codesandbox](https://codesandbox.io/p/sandbox/image-hotspot-tu-pian-re-qu-lkczjc)
-![GIF 2025-3-28 14-55-20.gif](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9039eaa8f3b34bab88cbd8a0bd93e670~tplv-k3u1fbpfcp-watermark.image?)
-
 
 [codesandbox](https://codesandbox.io/p/sandbox/qx8n4t)
 ![GIF 2025-3-28 13-56-30.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0af482617a2d46258fd69247b8ffdd36~tplv-k3u1fbpfcp-watermark.image?)
