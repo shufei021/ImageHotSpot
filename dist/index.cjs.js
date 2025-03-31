@@ -227,13 +227,13 @@ class ImageHotSpot {
     delHotArea(el) {
         const squareItem = el.closest(".hot-square");
         if (squareItem) {
-            const index = squareItem.querySelector(".hot-seq").innerText * 1;
+            const seq = squareItem.querySelector(".hot-seq").innerText * 1;
             const delFunc = () => {
                 squareItem.remove();
-                this.resetHotSeq(index);
+                this.resetHotSeq(seq);
             };
             if (typeof this.options.beforeDel === "function") {
-                this.options.beforeDel(index, squareItem, delFunc);
+                this.options.beforeDel(seq, squareItem, delFunc);
             }
             else {
                 delFunc();
@@ -241,7 +241,7 @@ class ImageHotSpot {
         }
     }
     // Reset hot area index
-    resetHotSeq(idx) {
+    resetHotSeq(seq) {
         if (!this.container)
             return;
         const squares = this.container.querySelectorAll(".hot-square");
@@ -249,7 +249,7 @@ class ImageHotSpot {
             const indexContent = item.querySelector(".hot-seq");
             if (indexContent) {
                 const itemIndex = Number(indexContent.innerText);
-                if (itemIndex > idx) {
+                if (itemIndex > seq) {
                     indexContent.innerText = String(itemIndex - 1);
                 }
             }

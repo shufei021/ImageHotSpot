@@ -89,7 +89,7 @@ declare class ImageHotSpot {
     delHotArea(el: {
         closest: (arg0: string) => any;
     }): void;
-    resetHotSeq(idx: number): void;
+    resetHotSeq(seq: number): void;
     handleMouseDown(e: MouseEvent): void;
     startDrag(e: {
         clientX: any;

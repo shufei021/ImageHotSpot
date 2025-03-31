@@ -99,8 +99,8 @@ new ImgHotSpot({
 
 ```js
 new ImgHotSpot({
-  afterAdd: ({ index, square }) => {
-    console.log(`热区 ${index} 已添加`, square);
+  afterAdd: ({ seq, square }) => {
+    console.log(`热区 ${seq} 已添加`, square);
   }
 });
 ```
@@ -111,7 +111,7 @@ new ImgHotSpot({
 
 ```js
 new ImgHotSpot({
-  beforeDel: (index, square, delFunc) => {
+  beforeDel: (seq, square, delFunc) => {
     if (confirm("确认删除？")) delFunc();
   }
 });
