@@ -8,7 +8,7 @@
   "jsnext:main": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
   "types": "dist/index.d.ts",
-
+  "keywords": ["img-hotspot", "hotspot","hot","spot"],
   "files": [
     "dist"
   ],
